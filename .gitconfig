@@ -1,0 +1,52 @@
+[diff]
+    tool = bc
+[merge]
+    tool = bc
+[difftool]
+    prompt = false
+[pager]
+    diff = 
+[user]
+	name = Steven Lai
+	email = steven.lai@tubemogul.com
+    username = steven.lai
+[pull]
+    rebase = true
+[branch "master"]
+    remote = origin
+    merge = refs/heads/master
+    rebase = true
+[push]
+    default = simple
+[alias]
+    co = checkout
+    cos = "!f() { git co sandbox/$(git config user.username)/$1; }; f"
+    sandbox = "!f() { git co -b sandbox/$(git config user.username)/$1; }; f"
+    review = "!f() { b=$(git branch --no-color | awk '/^[^ ]/{ print $2 }'); git rebase master && git co master && git pull --rebase && git merge $b; }; f"
+    push-review = "!f() { git push origin HEAD:refs/for/master; }; f"
+    review-combined = "!f() { git format-patch master --stdout > ~/patch.patch; git co master; patch -p1 < ~/patch.patch; for FILE in `grep  'create mode [0-9]* '  ~/patch.patch | perl -p -e 's/^ create mode [0-9]* (.*)\n/$1 /g;'`; do git add $FILE; done; git commit -a; }; f"
+    done = "!f() { git reset --hard origin/master; }; f"
+    da = difftool -d
+    # git show --pretty="format:" --name-only $1 --> show changes (filenames only)
+    # grep -v "^$" --> hide empty lines
+    fshow = ! zsh -c 'git show --pretty="format:" --name-only $1 | grep -v "^$" | sort | uniq | sed -e "s#^#`git rev-parse --show-toplevel`/#"' -
+[gerrit]
+    createchangeid = true
+[core]
+	excludesfile = /Users/steven.lai/.gitignore_global
+[difftool "sourcetree"]
+	cmd = /usr/local/bin/bcomp -ro \"$LOCAL\" \"$REMOTE\"
+	path = 
+[mergetool "sourcetree"]
+	cmd = /usr/local/bin/bcomp \"$LOCAL\" \"$REMOTE\" \"$BASE\" \"$MERGED\"
+	trustExitCode = true
+[git-up "bundler"]
+	check = true
+[git-up "rebase"]
+#log-hook = "echo \"changes on $1:\"; git log --oneline --decorate $1..$2"
+    # {Abbreviated hash commit} [{Author}] {Subject}
+	log-hook = "echo \"changes on $1:\"; git log --decorate $1..$2 --pretty=format:'%C(yellow)%h %Cred[%an] %Creset%s'"
+[credential]
+	helper = osxkeychain
+[commit]
+	template = /Users/steven.lai/.stCommitMsg

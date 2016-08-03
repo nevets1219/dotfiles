@@ -1,0 +1,82 @@
+# Use MacVim as replacement for vim
+# This shouldn't be need if you 'sudo vim /etc/paths' and change it such that /usr/local/bin comes before /usr/bin
+#alias vim='/usr/local/Cellar/macvim/7.4-73/MacVim.app/Contents/MacOS/Vim'
+
+# Use ctags installed by Homebrew and not Xcode
+# See above
+#alias ctags='/usr/local/Cellar/ctags/5.8/bin/ctags'
+
+# Show servers that you can SSH to (manually update)
+alias showSSH='cat ~/tools/ssh.info'
+
+# Colorized output, show files that begin with period, and long format
+alias ll='ls -Gal'
+
+# Smart-case, follow sym-links, and use 'less' as pager
+alias ackp-raw='ack --smart-case --follow --pager="less -R" '
+alias ackp='ack --smart-case --follow --pager="less -R" --ignore-dir=/Users/steven.lai/git/tmp --ignore-dir=/Users/steven.lai/git/non-stats --ignore-dir=generated '
+alias ackf='ack --smart-case --follow -g'
+
+# ack the code
+function ackpgit() {
+    ackp "$@" /Users/steven.lai/git
+}
+
+# Show the number of min/max columns
+function countColumns() {
+    echo "MAX = $(awk '{print NF}' $1 | sort -nu | tail -n 1)"
+    echo "MIN = $(awk '{print NF}' $1 | sort -rnu | tail -n 1;)"
+}
+
+alias showChanges='git difftool -d origin/master...`git rev-parse --abbrev-ref HEAD`'
+
+# Search by filename
+alias findgitfile='find ~/git | ack '
+
+# Goto the git directory
+alias gogogit='cd ~/git'
+
+# Search for running processes using ack
+alias is='ps -ef | ack '
+
+# Confirm deletes just to be safe
+alias rm='rm -i'
+
+export EDITOR=vim
+
+# Enable color in ls
+export CLICOLOR=1
+export LSCOLORS=Gxfxcxdxbxegedabagacad
+
+# Maven setup
+#export M2_HOME=/usr/local/apache-maven-3.2.2
+#export M2=$M2_HOME/bin
+export MAVEN_OPTS="-Xms256m -Xmx512m"
+#export PATH=$M2:$PATH
+
+# GO
+#export GOPATH=$HOME/go
+#export PATH=$PATH:$GOPATH/bin
+
+# Ruby
+export PATH="/Users/steven.lai/.rbenv/shims:${PATH}"
+
+# Homebrew github personal token to bypass query limits
+export HOMEBREW_GITHUB_API_TOKEN=TODO
+export HOMEBREW_NO_ANALYTICS=1
+
+# Add tools to the path (e.g. git_diff_wrapper so we can Use vimdiff for git diff)
+export PATH=/Users/steven.lai/tools:$PATH
+
+# Set JAVA_HOME
+#alias java6="export JAVA_HOME=`/usr/libexec/java_home -v 1.6`"
+alias java7="export JAVA_HOME=`/usr/libexec/java_home -v 1.7`"
+alias java8="export JAVA_HOME=`/usr/libexec/java_home -v 1.8`"
+
+export JAVA_HOME=$(/usr/libexec/java_home)
+
+# Show dependency tree using Maven
+alias showDependency='mvn dependency:tree -Dverbose'
+
+bindkey -M viins '^r' history-incremental-search-backward
+bindkey -M vicmd '^r' history-incremental-search-backward
